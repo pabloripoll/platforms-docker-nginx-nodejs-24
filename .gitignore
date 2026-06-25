@@ -39,19 +39,18 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Repository
-
-# Platforms
-
-# Project Schemas Samples
-/resources/application/*
-!/resources/application/.gitkeep
-
-# API content
-/apirest/*
-!/apirest/.gitkeep
+# Project
+/Makefile
+/resources/automation/remote/*
+!/resources/automation/remote/.gitkeep
+/resources/databases/*
+!/resources/databases/.gitkeep
+/api-grpc/*
+!/api-grpc/.gitkeep
+/api-rest/*
+!/api-rest/.gitkeep
 /application/*
 !/application/.gitkeep
 
-# Personal developer vault
+# Developer's vault
 /vault
