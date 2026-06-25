@@ -2,10 +2,10 @@
 .idea
 .vscode
 .gitignore
-
+.git
+.gitignore
+.vscode
 compose*.yml
 Dockerfile
-Makefile
-
 node_modules
 vendor
