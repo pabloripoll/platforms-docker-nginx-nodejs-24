@@ -52,39 +52,45 @@ local-ownership-set: ## sets recursively local root directory ownership
 	$(SUDO) chown -R ${user}:${group} $(ROOT_DIR)/
 
 # -------------------------------------------------------------------------------------------------
-#  WEB Application Service
+#  Application
 # -------------------------------------------------------------------------------------------------
 .PHONY: webapp-hostcheck webapp-info webapp-set webapp-create webapp-network webapp-ssh webapp-start webapp-stop webapp-destroy
 
-webapp-hostcheck: ## shows this project ports availability on local machine for webapp container
+webapp-hostcheck: ## shows this project ports availability on local machine for container
 	cd platforms/$(WEBAPP_PLTF) && $(MAKE) port-check
 
-webapp-info: ## shows the webapp docker related information
+webapp-info: ## shows the docker related information
 	cd platforms/$(WEBAPP_PLTF) && $(MAKE) info
 
-webapp-set: ## sets the webapp enviroment file to build the container
+webapp-set: ## sets the enviroment file to build the container
 	cd platforms/$(WEBAPP_PLTF) && $(MAKE) env-set
 
-webapp-create: ## creates the webapp container from Docker image
-	cd platforms/$(WEBAPP_PLTF) && $(MAKE) build up
+webapp-build: ## builds and ensures changes in the Dockerfile, build steps, or copied-in files are applied
+	cd platforms/$(WEBAPP_PLTF) && $(MAKE) build
 
-webapp-network: ## creates the webapp container network - execute this recipe first before others
+webapp-create: ## starts up or creates the container for running in detached mode
+	cd platforms/$(WEBAPP_PLTF) && $(MAKE) up
+
+webapp-network: ## starts up into an existing custom network for container-to-container communication, runnning in detached mode
+	cd platforms/$(WEBAPP_PLTF) && $(MAKE) clear network
+
+webapp-host-gateway: ## starts up for container-to-host communication, runnning in detached mode
 	$(MAKE) webapp-stop
-	cd platforms/$(WEBAPP_PLTF) && $(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.network.yml up -d
+	cd platforms/$(WEBAPP_PLTF) && $(MAKE) clear host-gateway
 
-webapp-ssh: ## enters the webapp container shell
+webapp-ssh: ## enters the container shell
 	cd platforms/$(WEBAPP_PLTF) && $(MAKE) ssh
 
-webapp-start: ## starts the webapp container running
+webapp-start: ## starts the container running
 	cd platforms/$(WEBAPP_PLTF) && $(MAKE) start
 
-webapp-stop: ## stops the webapp container but its assets will not be destroyed
+webapp-stop: ## stops the container but its assets will not be destroyed
 	cd platforms/$(WEBAPP_PLTF) && $(MAKE) stop
 
-webapp-restart: ## restarts the running webapp container
+webapp-restart: ## restarts the running container
 	cd platforms/$(WEBAPP_PLTF) && $(MAKE) restart
 
-webapp-destroy: ## destroys completly the webapp container
+webapp-destroy: ## destroys completly the container
 	echo ${C_RED}"Attention!"${C_END};
 	echo ${C_YEL}"You're about to remove the "${C_BLU}"$(WEBAPP_PLTF)"${C_END}" container and delete its image resource."${C_END};
 	@echo -n ${C_RED}"Are you sure to proceed? "${C_END}"[y/n]: " && read response && if [ $${response:-'n'} != 'y' ]; then \
